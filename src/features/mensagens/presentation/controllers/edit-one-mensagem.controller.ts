@@ -7,7 +7,7 @@ import {
   serverError,
   sucess,
 } from "../../../../core/presentation/helpers/http-helper";
-import { MensagemRepository } from "../../infra/mensagem.repository";
+import { MensagemRepository } from "../../infra/repositories/mensagem.repository";
 
 export class EditMessageController implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
@@ -18,12 +18,12 @@ export class EditMessageController implements Controller {
       return badRequest(res, "EMPTY_FIELDS_ERROR");
     }
     try {
-      const { uid, user_uid } = req.params;
+      const { uid, userUid } = req.params;
       const repository = new MensagemRepository();
 
       const mensagem = await repository.editMessage({
         uid,
-        userUid: user_uid,
+        userUid: userUid,
         ...req.body,
       });
 
@@ -31,11 +31,11 @@ export class EditMessageController implements Controller {
 
       const cache = new CacheRepository();
       await cache.delete(`Raposo:Mensagem:${uid}`);
-      await cache.delete("Raposo:Mensagens:Lista");
+      await cache.delete(`Raposo:Mensagens:User:${userUid}:Lista`);
 
       console.log(mensagem);
       return sucess(res, mensagem);
-    } catch (err) {
+    } catch (err: any) {
       return serverError(res, err);
     }
   }

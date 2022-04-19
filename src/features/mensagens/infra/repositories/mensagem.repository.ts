@@ -1,7 +1,7 @@
-import { MensagemEntity } from "../../../core/infra/data/database/entities/mensagem";
-import { UserEntity } from "../../../core/infra/data/database/entities/user";
-import { User } from "../../../core/domain/models/user";
-import { Mensagem } from "../domain/models/mensagem";
+import { MensagemEntity } from "../../../../core/infra/data/database/entities/mensagem";
+import { UserEntity } from "../../../../core/infra/data/database/entities/user";
+import { User } from "../../../../core/domain/models/user";
+import { Mensagem } from "../../../../core/domain/models/mensagem";
 
 interface MensagemParams {
   uid?: string;
@@ -87,7 +87,7 @@ export class MensagemRepository {
       uid: entity.uid,
       descricao: entity.descricao,
       detalhamento: entity.detalhamento,
-      user_uid: entity.userUid,
+      userUid: entity.userUid,
     };
   }
 }

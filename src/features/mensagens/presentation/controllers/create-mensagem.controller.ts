@@ -5,7 +5,7 @@ import {
   serverError,
   sucess,
 } from "../../../../core/presentation/helpers/http-helper";
-import { MensagemRepository } from "../../infra/mensagem.repository";
+import { MensagemRepository } from "../../infra/repositories/mensagem.repository";
 
 export class CreateMessageController implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
@@ -14,24 +14,24 @@ export class CreateMessageController implements Controller {
 
       const cache = new CacheRepository();
 
-      const { user_uid } = req.params;
+      const { userUid } = req.params;
 
       const mensagem = await repository.create({
-        userUid: user_uid,
+        userUid: userUid,
         ...req.body,
       });
 
       const result = await cache.set(
-        `Raposo:Mensagem:${mensagem.uid}`,
+        `Raposo:Mensagem:${mensagem?.uid}`,
         mensagem
       );
 
       if (!result) console.log("Não salvou no cache do Redis");
 
-      await cache.delete("Raposo:Mensagens:Lista");
+      await cache.delete(`Raposo:Mensagens:User:${userUid}:Lista`);
 
       return sucess(res, mensagem);
-    } catch (err) {
+    } catch (err: any) {
       return serverError(res, err);
     }
   }

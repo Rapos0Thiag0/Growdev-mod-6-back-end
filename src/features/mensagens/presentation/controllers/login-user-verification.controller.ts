@@ -5,21 +5,21 @@ import {
   serverError,
   sucess,
 } from "../../../../core/presentation/helpers/http-helper";
-import { MensagemRepository } from "../../infra/mensagem.repository";
+import { MensagemRepository } from "../../infra/repositories/mensagem.repository";
 
 export class LoginUserVerification implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
     try {
-      const { user_uid } = req.params;
+      const { userUid } = req.params;
 
       const repository = new MensagemRepository();
 
-      const loggedUser = await repository.getLoggedUser(user_uid);
+      const loggedUser = await repository.getLoggedUser(userUid);
 
-      if (!loggedUser.uid) return notFound(res, "USER_NOT_LOGGED");
+      if (!loggedUser) return notFound(res, "USER_NOT_LOGGED");
 
-      return sucess(res, loggedUser.uid);
-    } catch (err) {
+      return sucess(res, loggedUser);
+    } catch (err: any) {
       return serverError(res, err);
     }
   }

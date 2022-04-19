@@ -6,8 +6,8 @@ import {
   serverError,
   sucess,
 } from "../../../../core/presentation/helpers/http-helper";
-import { Mensagem } from "../../domain/models/mensagem";
-import { MensagemRepository } from "../../infra/mensagem.repository";
+import { Mensagem } from "../../../../core/domain/models/mensagem";
+import { MensagemRepository } from "../../infra/repositories/mensagem.repository";
 
 export class GetByUidMessageController implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
@@ -32,7 +32,7 @@ export class GetByUidMessageController implements Controller {
       await cache.set(`Raposo:Mensagem:${mensagem.uid}`, mensagem);
 
       return sucess(res, mensagem);
-    } catch (err) {
+    } catch (err: any) {
       return serverError(res, err);
     }
   }

@@ -10,19 +10,19 @@ export default class MensagemRoutes {
   public init(): Router {
     const routes = Router();
 
-    routes.post("/mensagens/:user_uid", new CreateMessageController().handle);
-    routes.get("/mensagens/:user_uid", new LoginUserVerification().handle);
+    routes.post("/mensagens/:userUid", new CreateMessageController().handle);
+    routes.get("/mensagens/:userUid", new LoginUserVerification().handle);
     routes.get(
-      "/mensagens/:user_uid/all",
+      "/mensagens/:userUid/all",
       new GetAllMessagesController().handle
     );
     routes.get(
-      "/mensagens/:user_uid/:uid",
+      "/mensagens/:userUid/:uid",
       new GetByUidMessageController().handle
     );
-    routes.put("/mensagens/:user_uid/:uid", new EditMessageController().handle);
+    routes.put("/mensagens/:userUid/:uid", new EditMessageController().handle);
     routes.delete(
-      "/mensagens/:user_uid/:uid",
+      "/mensagens/:userUid/:uid",
       new DestroyMessageController().handle
     );
 

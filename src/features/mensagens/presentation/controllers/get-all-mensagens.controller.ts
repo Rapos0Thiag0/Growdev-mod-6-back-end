@@ -6,15 +6,19 @@ import {
   serverError,
   sucess,
 } from "../../../../core/presentation/helpers/http-helper";
-import { Mensagem } from "../../domain/models/mensagem";
-import { MensagemRepository } from "../../infra/mensagem.repository";
+import { Mensagem } from "../../../../core/domain/models/mensagem";
+import { MensagemRepository } from "../../infra/repositories/mensagem.repository";
 
 export class GetAllMessagesController implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
     try {
+      const { userUid } = req.params;
+
       const cache = new CacheRepository();
 
-      const mensagensCache = await cache.get("Raposo:mensagens:Lista");
+      const mensagensCache = await cache.get(
+        `Raposo:Mensagens:User:${userUid}:Lista`
+      );
 
       if (mensagensCache) {
         return sucess(
@@ -23,18 +27,16 @@ export class GetAllMessagesController implements Controller {
         );
       }
 
-      const { user_uid } = req.params;
-
       const repository = new MensagemRepository();
 
-      const mensagens = await repository.getAllMessages(user_uid);
+      const mensagens = await repository.getAllMessages(userUid);
 
       if (mensagens.length === 0) return notFound(res, "MESSAGES_NOT_FOUND");
 
-      await cache.set(`Raposo:Mensagens:Lista`, mensagens);
+      await cache.set(`Raposo:Mensagens:User:${userUid}:Lista`, mensagens);
 
-      sucess(res, mensagens);
-    } catch (err) {
+      return sucess(res, mensagens);
+    } catch (err: any) {
       return serverError(res, err);
     }
   }
